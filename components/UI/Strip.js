@@ -1,23 +1,43 @@
 import React from "react";
-import { Text, View, StyleSheet, Dimensions, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Platform,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+} from "react-native";
 
 const Strip = (props) => {
+  // const news = props.navigation.getParam("news");
+  const { title, urlToImage, publishedAt } = props.news;
+  // console.log(props.onSelect);
+  let date = new Date(`${publishedAt}`);
+  let TouchCmp = TouchableOpacity;
+
+  if (Platform.OS === "android" && Platform.Version >= 21) {
+    TouchCmp = TouchableNativeFeedback;
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title}>
-          {props.title}
-        </Text>
-        <Text style={styles.date}>Friday 24, 2020</Text>
+    <TouchCmp onPress={props.onSelect} useForeground>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title}>
+            {title}
+          </Text>
+          <Text style={styles.date}>{date.toLocaleString()}</Text>
+        </View>
+        <Image
+          source={{
+            uri: urlToImage,
+          }}
+          style={styles.image}
+        />
       </View>
-      <Image
-        source={{
-          uri:
-            "https://gumlet.assettype.com/nationalherald%2F2020-04%2Fdfde116a-4fe3-4b33-bf16-5d17ad905df0%2Ftectonic.jpg?rect=11%2C0%2C594%2C312&w=1200&auto=format%2Ccompress&ogImage=true",
-        }}
-        style={styles.image}
-      />
-    </View>
+    </TouchCmp>
   );
 };
 
@@ -26,7 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
     height: 70,
-    margin: 5,
+    paddingVertical: 5,
   },
   content: {
     width: "80%",

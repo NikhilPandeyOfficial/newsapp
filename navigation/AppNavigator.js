@@ -29,6 +29,7 @@ const defaultStackNavOptions = {
 const HomeNavigator = createStackNavigator(
   {
     Home: HomeScreen,
+    News: NewsArticleScreen,
     TopicNews: TopicNewsScreen,
   },
   {

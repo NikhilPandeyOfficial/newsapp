@@ -5,7 +5,6 @@ import CustomHeaderButton from "./../components/UI/HeaderButton";
 import Story from "./../components/UI/Story";
 
 const SavedScreen = (props) => {
-  // console.log(props.navigation);
   return (
     <View style={styles.screen}>
       <Story

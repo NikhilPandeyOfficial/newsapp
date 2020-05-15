@@ -16,7 +16,6 @@ const Story = (props) => {
   const TouchCmp = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.version >= 21) {
-    Console.log("d");
     TouchCmp = TouchableNativeFeedback;
   }
 
@@ -36,7 +35,7 @@ const Story = (props) => {
             style={styles.image}
           />
         </View>
-        <View style={styles.texContainer}>
+        <View style={styles.textContainer}>
           <View style={styles.savedContainer}>
             <Text style={styles.source}> {props.source} </Text>
             <View style={styles.saveIcon}>
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderWidth: 1,
   },
-  texContainer: {
+  textContainer: {
     padding: 5,
   },
   savedContainer: {

@@ -1,11 +1,58 @@
-import React from "react";
-import { StyleSheet, View, Text, SafeAreaView, ScrollView } from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  ActivityIndicator,
+  Button,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useSelector, useDispatch } from "react-redux";
 
 import CustomHeaderButton from "./../components/UI/HeaderButton";
 import Strip from "./../components/UI/Strip";
+import * as newsActions from "../store/actions/news";
+import ScrollableCard from "./../components/UI/ScrollableCard";
 
 const HomeScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const allNewsObj = useSelector((state) => state.newses.allNews);
+  const dispatch = useDispatch();
+
+  const loadNewses = useCallback(async () => {
+    setError(null);
+    try {
+      await dispatch(newsActions.fetchNews());
+    } catch (err) {
+      setError(err.message);
+    }
+  }, [dispatch, setIsLoading, setError]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    loadNewses().then(() => setIsLoading(false));
+  }, [dispatch, loadNewses]);
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>An error occurred !</Text>
+        <Button title="Try again" onPress={loadNewses} />
+      </View>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -13,90 +60,13 @@ const HomeScreen = (props) => {
       style={styles.screen}
     >
       <View style={styles.container}>
-        <View style={styles.categoryView}>
-          <View style={styles.category}>
-            <Text numberOfLines={1} style={styles.categoryName}>
-              opStories
-            </Text>
-          </View>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            nestedScrollEnabled={true}
-            style={styles.categoryList}
-          >
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-          </ScrollView>
-        </View>
-        <View style={styles.categoryView}>
-          <View style={styles.category}>
-            <Text numberOfLines={1} style={styles.categoryName}>
-              opStories
-            </Text>
-          </View>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            nestedScrollEnabled={true}
-            style={styles.categoryList}
-          >
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-          </ScrollView>
-        </View>
-        <View style={styles.categoryView}>
-          <View style={styles.category}>
-            <Text numberOfLines={1} style={styles.categoryName}>
-              opStories
-            </Text>
-          </View>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            nestedScrollEnabled={true}
-            style={styles.categoryList}
-          >
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south koreajhhh it is coun alchol is den flksj  f jlkj lkj j lksjkj"
-              source="The Economic Times"
-            />
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-            <Strip
-              onSelect={() => props.navigation.navigate("News")}
-              title="Severe outbreak of Mers in south korea"
-              source="The Economic Times"
-            />
-          </ScrollView>
-        </View>
+        {Object.entries(allNewsObj).map((entry) => (
+          <ScrollableCard
+            navigation={props.navigation}
+            key={entry[0]}
+            newscontainer={entry}
+          />
+        ))}
       </View>
     </ScrollView>
   );
@@ -113,33 +83,19 @@ HomeScreen.navigationOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   screen: {
     flex: 1,
-    padding: 10,
+    // padding: 10,
     // backgroundColor: "white",
   },
   container: {
     // borderWidth: 1,
-  },
-  categoryView: {
-    height: 200,
-    flexDirection: "row",
-  },
-  category: {
-    width: "20%",
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  categoryName: {
-    transform: [{ rotate: "-90deg" }],
-  },
-  catergoryList: {
-    width: "80%",
-    paddingHorizontal: 15,
-    marginVertical: 15,
-    alignItems: "center",
-    justifyContent: "center",
+    // height: 400,
   },
 });
 
