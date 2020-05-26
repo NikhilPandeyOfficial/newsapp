@@ -9,40 +9,44 @@ import {
   TouchableNativeFeedback,
   Platform,
 } from "react-native";
-
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
+import * as newsActions from "../../store/actions/news";
+import { useDispatch } from "react-redux";
+
 const Story = (props) => {
-  const TouchCmp = TouchableOpacity;
-
-  if (Platform.OS === "android" && Platform.version >= 21) {
-    TouchCmp = TouchableNativeFeedback;
-  }
-
+  const { title, urlToImage, source } = props.news;
+  // console.log("inside the story ", props.news);
+  // return (
+  //   <View>
+  //     <Text> what's the problem</Text>
+  //   </View>
+  // );
   return (
-    <TouchCmp
+    <TouchableNativeFeedback
       onPress={() => {
         props.onSelect();
       }}
     >
-      <View style={{ ...styles.container }}>
+      <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri:
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2019.svg/1200px-BBC_News_2019.svg.png",
+              uri: urlToImage,
             }}
             style={styles.image}
           />
         </View>
         <View style={styles.textContainer}>
           <View style={styles.savedContainer}>
-            <Text style={styles.source}> {props.source} </Text>
-            <View style={styles.saveIcon}>
-              <MaterialIcons name="bookmark" size={20} />
-            </View>
+            <Text style={styles.source}> {source["name"]} </Text>
+            <TouchableNativeFeedback onPress={props.onUnSave}>
+              <View style={styles.saveIcon}>
+                <MaterialIcons name="bookmark" size={20} />
+              </View>
+            </TouchableNativeFeedback>
           </View>
-          <Text style={styles.title}>{props.title}</Text>
+          <Text style={styles.title}>{title.split("-")[0]}</Text>
 
           <View style={styles.btnContainer}>
             <Text style={styles.read}> Read More ... </Text>
@@ -50,16 +54,20 @@ const Story = (props) => {
           </View>
         </View>
       </View>
-    </TouchCmp>
+    </TouchableNativeFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    // flex: 1,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     height: 80,
-    marginVertical: 15,
-    width: Dimensions.get("window").width * 0.9,
+    marginVertical: 5,
+    marginHorizontal: 15,
+    width: "90%",
     borderWidth: 1,
     borderRadius: 10,
     overflow: "hidden",
@@ -72,10 +80,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     padding: 5,
+    width: "80%",
   },
   savedContainer: {
     flexDirection: "row",
-    width: "75%",
+    width: "100%",
   },
   saveIcon: {
     flex: 1,
@@ -84,19 +93,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "700",
-    width: "80%",
-    fontSize: 16,
+    width: "100%",
+    fontSize: 14,
   },
   btnContainer: {
     flex: 1,
     flexDirection: "row",
-    width: "75%",
+    width: "100%",
     justifyContent: "flex-end",
     alignItems: "flex-end",
   },
   read: {
     color: "#037ffc",
-    fontSize: 14,
+    fontSize: 12,
     fontStyle: "italic",
   },
 });

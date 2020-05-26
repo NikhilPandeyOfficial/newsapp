@@ -13,7 +13,7 @@ import {
 const Strip = (props) => {
   // const news = props.navigation.getParam("news");
   const { title, urlToImage, publishedAt } = props.news;
-  // console.log(props.onSelect);
+
   let date = new Date(`${publishedAt}`);
   let TouchCmp = TouchableOpacity;
 

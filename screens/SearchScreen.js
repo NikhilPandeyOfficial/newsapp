@@ -13,21 +13,6 @@ const SearchScreen = (props) => {
   );
 };
 
-SearchScreen.navigationOptions = (navData) => {
-  return {
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item title="Menu" iconName="menu" onPress={() => {}} />
-      </HeaderButtons>
-    ),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item title="User" iconName="user" onPress={() => {}} />
-      </HeaderButtons>
-    ),
-  };
-};
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,

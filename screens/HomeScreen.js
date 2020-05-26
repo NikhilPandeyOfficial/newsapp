@@ -49,7 +49,7 @@ const HomeScreen = (props) => {
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color="black" />
       </View>
     );
   }
@@ -72,26 +72,17 @@ const HomeScreen = (props) => {
   );
 };
 
-HomeScreen.navigationOptions = (navData) => {
-  return {
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item title="Menu" iconName="menu" onPress={() => {}} />
-      </HeaderButtons>
-    ),
-  };
-};
-
 const styles = StyleSheet.create({
   centered: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
   },
   screen: {
     flex: 1,
     // padding: 10,
-    // backgroundColor: "white",
+    backgroundColor: "white",
   },
   container: {
     // borderWidth: 1,

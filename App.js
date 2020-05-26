@@ -6,10 +6,12 @@ import ReduxThunk from "redux-thunk";
 // import logger from "redux-logger";
 
 import newsReducer from "./store/reducers/news";
+import authReducer from "./store/reducers/auth";
 import AppNavigator from "./navigation/AppNavigator";
 
 const rootReducer = combineReducers({
   newses: newsReducer,
+  auth: authReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

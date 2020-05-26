@@ -1,5 +1,5 @@
 import React from "react";
-import { createAppContainer } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import {
@@ -15,6 +15,8 @@ import TopicNewsScreen from "./../screens/TopicNewsScreen";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import NewsArticleScreen from "./../screens/NewsArticleScreen";
 import SearchScreen from "./../screens/SearchScreen";
+import LoginScreen from "./../screens/LoginScreen";
+import AuthScreen from "./../screens/AuthScreen";
 
 const defaultStackNavOptions = {
   // headerStyle: {
@@ -109,10 +111,22 @@ const TabNavigator = createBottomTabNavigator(
   }
 );
 
-const drawerNavigator = createDrawerNavigator({
-  Home: {
-    screen: TabNavigator,
+const AuthNavigator = createStackNavigator(
+  {
+    // Login: LoginScreen,
+    Auth: AuthScreen,
   },
+  {
+    defaultNavigationOptions: {
+      headerShown: false,
+    },
+  }
+);
+
+const MainNavigator = createSwitchNavigator({
+  Auth: AuthNavigator,
+  App: TabNavigator,
 });
 
-export default createAppContainer(drawerNavigator);
+export default createAppContainer(MainNavigator);
+// export default createAppContainer(AuthNavigator);
