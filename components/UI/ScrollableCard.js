@@ -1,5 +1,11 @@
 import React from "react";
-import { Text, View, ScrollView, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableNativeFeedback,
+} from "react-native";
 
 import Strip from "./Strip";
 
@@ -8,11 +14,20 @@ const ScrollableCard = (props) => {
   const category = props.newscontainer[0];
   return (
     <View style={styles.categoryView}>
-      <View style={styles.category}>
-        <Text numberOfLines={1} style={styles.categoryName}>
-          {category}
-        </Text>
-      </View>
+      <TouchableNativeFeedback
+        onPress={() => {
+          props.navigation.navigate("CategoryNews", {
+            category: category,
+            newsarray: newsarray,
+          });
+        }}
+      >
+        <View style={styles.category}>
+          <Text numberOfLines={1} style={styles.categoryName}>
+            {category}
+          </Text>
+        </View>
+      </TouchableNativeFeedback>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -44,12 +59,18 @@ const styles = StyleSheet.create({
   },
   category: {
     width: "20%",
+    // height: "100%",
     backgroundColor: "white",
     justifyContent: "center",
+    // paddingBottom: 50,
+    // borderWidth: 1,
   },
   categoryName: {
     transform: [{ rotate: "-90deg" }],
-    justifyContent: "flex-start",
+    fontFamily: "montserrat-bold",
+    // height: "100%",
+    // justifyContent: "flex-end",
+    // borderWidth: 1,
   },
   categoryList: {
     marginTop: 15,

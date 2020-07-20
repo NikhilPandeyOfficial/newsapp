@@ -9,7 +9,7 @@ let timer;
 
 export const authenticate = (userId, token, expiryTime) => {
   return (dispatch) => {
-    dispatch(setLogoutTime(expiryTime));
+    dispatch(setLogoutTimer(expiryTime));
     dispatch({ type: AUTHENTICATE, userId: userId, token: token });
   };
 };
@@ -42,7 +42,7 @@ const afterResHandler = async (response, dispatch) => {
   const expirationTime = new Date(
     new Date().getTime() + parseInt(resData.expiresIn) * 1000
   );
-  saveDataToStorage(resData.idToken, resData.localId, expirationTime);
+  await saveDataToStorage(resData.idToken, resData.localId, expirationTime);
 };
 
 export const signup = (email, password) => {
@@ -92,27 +92,31 @@ export const login = (email, password) => {
   };
 };
 
-export const logout = () => {
-  return async (dispatch) => {
-    clearLogoutTimer();
-    AsyncStorage.removeItem("userData");
-    return { type: LOGOUT };
-  };
-};
+// export const logout = () => {
+//   console.log("called");
+//   clearLogoutTimer();
+//   // timer = 0;
+//   AsyncStorage.removeItem("userData");
+//   return { type: LOGOUT };
+// };
 
-const clearLogoutTimer = () => {
-  if (timer) {
-    clearTimeout(timer);
-  }
-};
+// const clearLogoutTimer = () => {
+//   if (timer) {
+//     // clearTimeout is built-in js method to clear the timer
+//     console.log(timer);
+//     clearTimeout(timer);
 
-const setLogoutTime = (expirationTime) => {
-  return async (dispatch) => {
-    timer = setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime);
-  };
-};
+//     console.log(timer);
+//   }
+// };
+
+// const setLogoutTime = (expirationTime) => {
+//   return (dispatch) => {
+//     timer = setTimeout(() => {
+//       dispatch(logout());
+//     }, expirationTime);
+//   };
+// };
 
 const saveDataToStorage = (token, userId, expirationDate) => {
   AsyncStorage.setItem(
@@ -123,4 +127,36 @@ const saveDataToStorage = (token, userId, expirationDate) => {
       expiryDate: expirationDate.toISOString(),
     })
   );
+};
+
+export const logout = () => {
+  clearLogoutTimer();
+
+  AsyncStorage.removeItem("userData");
+  return { type: LOGOUT };
+};
+
+const clearLogoutTimer = async () => {
+  if (timer) {
+    // clearTimeout is built-in js method to clear the timer
+    console.log("clearLogoutTimer befor " + timer);
+
+    await clearTimeout(timer);
+    console.log("clearLogoutTimer befor " + timer);
+  }
+};
+
+// auto logout feature
+const setLogoutTimer = (expirationTime) => {
+  console.log("from setLogoutTimer");
+  return (dispatch) => {
+    console.log("from setLogoutTimer before " + timer);
+
+    timer = setTimeout(() => {
+      // for dispatch logout() we're taking advantage of
+      // 'redux-thunk' way of return => dispatch ....
+      dispatch(logout());
+    }, expirationTime);
+    console.log("from setLogoutTimer after " + timer);
+  };
 };

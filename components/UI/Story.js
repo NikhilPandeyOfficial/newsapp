@@ -16,12 +16,7 @@ import { useDispatch } from "react-redux";
 
 const Story = (props) => {
   const { title, urlToImage, source } = props.news;
-  // console.log("inside the story ", props.news);
-  // return (
-  //   <View>
-  //     <Text> what's the problem</Text>
-  //   </View>
-  // );
+
   return (
     <TouchableNativeFeedback
       onPress={() => {
@@ -38,19 +33,27 @@ const Story = (props) => {
           />
         </View>
         <View style={styles.textContainer}>
-          <View style={styles.savedContainer}>
-            <Text style={styles.source}> {source["name"]} </Text>
-            <TouchableNativeFeedback onPress={props.onUnSave}>
-              <View style={styles.saveIcon}>
-                <MaterialIcons name="bookmark" size={20} />
-              </View>
+          <View style={styles.headContainer}>
+            <View style={styles.sourceContainer}>
+              <Text style={styles.source}> {source["name"]} </Text>
+            </View>
+            <TouchableNativeFeedback
+              style={styles.savedContainer}
+              onPress={props.onUnSave}
+            >
+              <MaterialIcons name="bookmark" size={20} />
             </TouchableNativeFeedback>
           </View>
-          <Text style={styles.title}>{title.split("-")[0]}</Text>
-
-          <View style={styles.btnContainer}>
-            <Text style={styles.read}> Read More ... </Text>
-            <AntDesign name="right" color="#037ffc" size={14} />
+          <View>
+            <Text numberOfLines={2} style={styles.title}>
+              {title}
+            </Text>
+          </View>
+          <View style={styles.btnOuterContainer}>
+            <View style={styles.btnInnerContainer}>
+              <Text style={styles.readText}> Read More ... </Text>
+              <AntDesign name="right" style={styles.readIcon} color="#037ffc" />
+            </View>
           </View>
         </View>
       </View>
@@ -60,53 +63,61 @@ const Story = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
     height: 80,
-    marginVertical: 5,
-    marginHorizontal: 15,
-    width: "90%",
-    borderWidth: 1,
+    margin: 10,
+    // borderWidth: 1,
     borderRadius: 10,
-    overflow: "hidden",
   },
-  image: {
-    width: 100,
-    borderRadius: 10,
-    height: "100%",
-    borderWidth: 1,
+  imageContainer: {
+    width: "30%",
   },
   textContainer: {
-    padding: 5,
-    width: "80%",
+    // marginLeft: 5,
+    // borderWidth: 1,
+    paddingHorizontal: 5,
+    width: "70%",
+  },
+  image: {
+    width: "100%",
+    borderRadius: 10,
+    height: "100%",
+  },
+  headContainer: {
+    flexDirection: "row",
+  },
+  sourceContainer: {
+    width: "90%",
+    // alignItems: "flex-start",
   },
   savedContainer: {
-    flexDirection: "row",
-    width: "100%",
+    width: "10%",
   },
-  saveIcon: {
-    flex: 1,
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
+  source: {
+    // fontWeight: "700",
+    fontFamily: "montserrat-bold",
+    // paddingLeft: ,
+    // borderWidth: 1,
   },
   title: {
-    fontWeight: "700",
-    width: "100%",
-    fontSize: 14,
+    // fontWeight: "700",
+    fontFamily: "montserrat-semibold",
+    paddingHorizontal: 5,
+    // borderWidth: 1,
   },
-  btnContainer: {
-    flex: 1,
+  btnInnerContainer: {
     flexDirection: "row",
-    width: "100%",
-    justifyContent: "flex-end",
+  },
+  btnOuterContainer: {
     alignItems: "flex-end",
   },
-  read: {
+  readText: {
     color: "#037ffc",
-    fontSize: 12,
-    fontStyle: "italic",
+    fontFamily: "montserrat-lightItalic",
+    // fontStyle: "italic",
+  },
+  readIcon: {
+    padding: 5,
   },
 });
 

@@ -27,6 +27,7 @@ const HomeScreen = (props) => {
     setError(null);
     try {
       await dispatch(newsActions.fetchNews());
+      // setError("testing");
     } catch (err) {
       setError(err.message);
     }
@@ -40,7 +41,7 @@ const HomeScreen = (props) => {
   if (error) {
     return (
       <View style={styles.centered}>
-        <Text>An error occurred !</Text>
+        <Text style={styles.customtext}>An error occurred !</Text>
         <Button title="Try again" onPress={loadNewses} />
       </View>
     );
@@ -80,13 +81,19 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   screen: {
-    flex: 1,
+    paddingVertical: 10,
+    // flex: 1,
     // padding: 10,
     backgroundColor: "white",
   },
   container: {
     // borderWidth: 1,
     // height: 400,
+  },
+  customtext: {
+    fontFamily: "montserrat-regular",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
 });
 

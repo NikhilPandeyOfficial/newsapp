@@ -26,6 +26,7 @@ const Input = (props) => {
     value: "",
     isValid: false,
     touched: false,
+    // touched: true,
   });
 
   const { onInputChange, id } = props;
@@ -81,12 +82,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   label: {
-    // fontFamily: "open-sans-bold",
+    fontFamily: "montserrat-medium",
     marginVertical: 8,
   },
   input: {
     paddingHorizontal: 2,
     paddingVertical: 5,
+    fontFamily: "opensans-regular",
     borderBottomColor: "#ccc",
     borderBottomWidth: 1,
   },
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   errorText: {
-    // fontFamily: "open-sans",
+    fontFamily: "opensans-regular",
     color: "red",
     fontSize: 13,
   },

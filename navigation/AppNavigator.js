@@ -6,33 +6,38 @@ import {
   Ionicons,
   MaterialIcons,
   FontAwesome,
+  AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
 import HomeScreen from "./../screens/HomeScreen";
 import SavedScreen from "./../screens/SavedScreen";
-import TopicNewsScreen from "./../screens/TopicNewsScreen";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import NewsArticleScreen from "./../screens/NewsArticleScreen";
 import SearchScreen from "./../screens/SearchScreen";
-import LoginScreen from "./../screens/LoginScreen";
 import AuthScreen from "./../screens/AuthScreen";
+import UserScreen from "./../screens/UserScreen";
+import CategoryNewsScreen from "./../screens/CategoryNewsScreen";
+import StartupScreen from "./../screens/StartupScreen";
+import BrowserScreen from "./../screens/BrowserScreen";
 
 const defaultStackNavOptions = {
   // headerStyle: {
   //   height: 110,
   // },
   // headerBackTitleVisible: false,
-  // headerTitleStyle: {
-  //   fontSize: 38,
-  // },
+  headerTitleStyle: {
+    // fontSize: 38,
+    fontFamily: "montserrat-bold",
+  },
 };
 
 const HomeNavigator = createStackNavigator(
   {
     Home: HomeScreen,
+    CategoryNews: CategoryNewsScreen,
     News: NewsArticleScreen,
-    TopicNews: TopicNewsScreen,
+    browser: BrowserScreen,
   },
   {
     defaultNavigationOptions: defaultStackNavOptions,
@@ -42,6 +47,8 @@ const HomeNavigator = createStackNavigator(
 const SearchNavigator = createStackNavigator(
   {
     Search: SearchScreen,
+    News: NewsArticleScreen,
+    browser: BrowserScreen,
   },
   {
     defaultNavigationOptions: defaultStackNavOptions,
@@ -52,6 +59,16 @@ const SavedNavigator = createStackNavigator(
   {
     Saved: SavedScreen,
     News: NewsArticleScreen,
+    browser: BrowserScreen,
+  },
+  {
+    defaultNavigationOptions: defaultStackNavOptions,
+  }
+);
+
+const UserNavigator = createStackNavigator(
+  {
+    User: UserScreen,
   },
   {
     defaultNavigationOptions: defaultStackNavOptions,
@@ -63,10 +80,15 @@ const TabNavigator = createBottomTabNavigator(
     Home: {
       screen: HomeNavigator,
       navigationOptions: {
-        tabBarIcon: (tabInfo) => {
+        tabBarIcon: ({ focused, tintColor }) => {
           // return <Entypo name="home" size={30} />;
           return (
-            <MaterialCommunityIcons name="newspaper" color="black" size={25} />
+            <AntDesign
+              name="home"
+              focused={focused}
+              color={tintColor}
+              size={25}
+            />
           );
         },
       },
@@ -74,26 +96,53 @@ const TabNavigator = createBottomTabNavigator(
     Search: {
       screen: SearchNavigator,
       navigationOptions: {
-        tabBarIcon: (tabInfo) => {
-          return <Ionicons name="ios-search" color="black" size={25} />;
+        tabBarIcon: ({ focused, tintColor }) => {
+          return (
+            <AntDesign
+              name="search1"
+              focused={focused}
+              color={tintColor}
+              size={25}
+            />
+          );
+
+          // return <Ionicons name="ios-search" focused={focused} tintColor={{ tintColor }} size={25} />;
         },
       },
     },
     Saved: {
       screen: SavedNavigator,
       navigationOptions: {
-        tabBarIcon: (tabInfo) => {
+        tabBarIcon: ({ focused, tintColor }) => {
           return (
-            <MaterialIcons name="bookmark-border" color="black" size={25} />
+            <AntDesign
+              name="book"
+              focused={focused}
+              color={tintColor}
+              size={25}
+            />
           );
+
+          // return (
+          //   <MaterialIcons name="bookmark-border" focused={focused} tintColor={{ tintColor }} size={25} />
+          // );
         },
       },
     },
     User: {
-      screen: SearchNavigator,
+      screen: UserNavigator,
       navigationOptions: {
-        tabBarIcon: (tabInfo) => {
-          return <FontAwesome name="user-circle" color="black" size={25} />;
+        tabBarIcon: ({ focused, tintColor }) => {
+          return (
+            <AntDesign
+              name="user"
+              focused={focused}
+              color={tintColor}
+              size={25}
+            />
+          );
+
+          // return <FontAwesome name="user-circle" focused={focused} tintColor={{ tintColor }} size={25} />;
         },
       },
     },
@@ -103,6 +152,8 @@ const TabNavigator = createBottomTabNavigator(
     tabBarPosition: "top",
     tabBarOptions: {
       showLabel: false,
+      activeTintColor: "#000000",
+      // activeBackgroundColor: "#9678f0",
       style: {
         height: 50,
         backgroundColor: "white",
@@ -124,6 +175,7 @@ const AuthNavigator = createStackNavigator(
 );
 
 const MainNavigator = createSwitchNavigator({
+  Startup: StartupScreen,
   Auth: AuthNavigator,
   App: TabNavigator,
 });

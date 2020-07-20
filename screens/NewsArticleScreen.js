@@ -5,9 +5,10 @@ import {
   View,
   Image,
   StyleSheet,
+  SafeAreaView,
   TouchableNativeFeedback,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 import * as newsActions from "../store/actions/news";
 import { useDispatch } from "react-redux";
@@ -32,7 +33,6 @@ const NewsArticleScreen = (props) => {
     setError(null);
     setIsLoading(true);
     try {
-      // const { content, description, publishedAt, title, urlToImage } = news;
       if (isSaved === 0) {
         await dispatch(newsActions.saveNews(news));
         setSaved(1);
@@ -41,14 +41,17 @@ const NewsArticleScreen = (props) => {
         setSaved(0);
       }
     } catch (err) {
-      console.log("error during saving " + err);
       setError(err.message);
     }
     setIsLoading(false);
   }, [dispatch]);
 
+  if (!news["content"]) news["content"] = "";
+
+  if (!news["description"]) news["description"] = "";
+
   return (
-    <ScrollView scrollEnabled={true} contentContainerStyle={{ flex: 1 }}>
+    <SafeAreaView style={styles.screen}>
       <View style={styles.content}>
         <Image
           source={{
@@ -56,91 +59,146 @@ const NewsArticleScreen = (props) => {
           }}
           style={styles.image}
         />
-        <View style={styles.container}>
-          <View style={styles.top}>
-            <Text style={styles.tagName}> {`#${category}`} </Text>
-            <Text style={styles.date}>
-              {new Date(news["publishedAt"]).toLocaleString()}
+      </View>
+      <View style={styles.container}>
+        <View style={styles.strip}>
+          <Text style={styles.tagName}> {`#${category}`} </Text>
+          <Text style={styles.date}>
+            {new Date(news["publishedAt"]).toLocaleString()}
+          </Text>
+        </View>
+        <ScrollView>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}> {news["source"]["name"]} </Text>
+            <TouchableNativeFeedback onPress={saveNewsHandler}>
+              <View style={styles.saveIcon}>
+                <MaterialIcons
+                  name={isSaved == 0 ? "bookmark-border" : "bookmark"}
+                  size={28}
+                />
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+          <View style={styles.newsContent}>
+            <Text style={styles.headLine}>{news["title"]}</Text>
+            <Text style={styles.news}>
+              {news["content"].length > news["description"].length
+                ? `${news["content"].substring(0, 200)}...`
+                : `${news["description"].substring(0, 200)}...`}
             </Text>
           </View>
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}> {news["source"]["name"]} </Text>
-          <TouchableNativeFeedback onPress={saveNewsHandler}>
-            <View style={styles.saveIcon}>
-              <MaterialIcons
-                name={isSaved == 0 ? "bookmark-border" : "bookmark"}
-                size={28}
-              />
+          <View style={styles.btnOuterContainer}>
+            <View style={styles.btnInnerContainer}>
+              <TouchableNativeFeedback
+                onPress={() => {
+                  props.navigation.navigate("browser", {
+                    uri: news.url,
+                    source: news.source.name,
+                  });
+                }}
+              >
+                <Text style={styles.readText}> Read Full Ariticle...</Text>
+              </TouchableNativeFeedback>
+              <AntDesign name="right" style={styles.readIcon} color="#037ffc" />
             </View>
-          </TouchableNativeFeedback>
-        </View>
-        <View style={styles.newsContent}>
-          <Text style={styles.headLine}>{news["title"].split("-")[0]}</Text>
-          <Text style={styles.news}>{news["content"]}</Text>
-        </View>
+          </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
+NewsArticleScreen.navigationOptions = (navData) => {
+  return {
+    headerShown: false,
+  };
+};
+
 const styles = StyleSheet.create({
-  content: {
+  screen: {
     flex: 1,
     // width: "100%",
     // height: "100%",
+    backgroundColor: "#fff",
+    // alignItems: "center",
+    // justifyContent: "center",
+  },
+  content: {
+    height: "40%",
     backgroundColor: "white",
   },
   container: {
-    // flex: 1,
+    height: "60%",
   },
   image: {
-    flex: 1,
     width: "100%",
-    height: "40%",
+    height: "100%",
   },
-  top: {
-    paddingVertical: 10,
+  strip: {
+    paddingVertical: 14,
     paddingHorizontal: 15,
-    elevation: 2,
+    elevation: 3,
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
   },
   tagName: {
-    fontSize: 12,
+    fontSize: 14,
     color: "black",
+    fontFamily: "montserrat-bold",
   },
   date: {
-    color: "grey",
-    fontSize: 12,
+    // color: "grey",
+    fontFamily: "montserrat-light",
+
+    fontSize: 14,
   },
   titleContainer: {
-    // flex: 1,
-    paddingVertical: 12,
+    // borderWidth: 1,
+    paddingTop: 12,
     paddingHorizontal: 15,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   title: {
-    flex: 1,
+    // borderWidth: 1,
     fontSize: 26,
+    fontFamily: "montserrat-bold",
   },
   newsContent: {
-    flex: 1,
-    paddingHorizontal: 20,
-    // paddingVertical: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   headLine: {
-    flex: 1,
+    // borderWidth: 1,
     fontSize: 22,
-    fontWeight: "bold",
+    paddingHorizontal: 5,
+    fontFamily: "montserrat-semibold",
+    // fontWeight: "bold",
   },
   news: {
+    // borderWidth: 1,
     fontSize: 14,
-    flex: 1,
-    paddingVertical: 12,
+    fontFamily: "opensans-regular",
+    paddingHorizontal: 5,
+    paddingVertical: 5,
     color: "grey",
+  },
+  btnInnerContainer: {
+    flexDirection: "row",
+  },
+  btnOuterContainer: {
+    paddingHorizontal: 15,
+    paddingBottom: 15,
+    alignItems: "flex-end",
+  },
+  readText: {
+    color: "#037ffc",
+    // fontStyle: "italic",
+    fontFamily: "montserrat-lightItalic",
+  },
+  readIcon: {
+    padding: 3,
   },
 });
 

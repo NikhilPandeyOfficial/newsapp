@@ -28,7 +28,9 @@ const Strip = (props) => {
           <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title}>
             {title}
           </Text>
-          <Text style={styles.date}>{date.toLocaleString()}</Text>
+          <Text style={styles.date} style={styles.date}>
+            {date.toLocaleString()}
+          </Text>
         </View>
         <Image
           source={{
@@ -59,13 +61,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     color: "black",
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: "montserrat-semibold",
     // fontSize: 30,
   },
 
   image: {
     width: 50,
     height: 50,
+  },
+  date: {
+    // color: "grey",
+    fontFamily: "montserrat-light",
   },
 });
 

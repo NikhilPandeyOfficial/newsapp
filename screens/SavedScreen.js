@@ -4,11 +4,14 @@ import {
   View,
   Text,
   ScrollView,
+  RefreshControl,
   Button,
+  SafeAreaView,
   ActivityIndicator,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
+import { LinearGradient } from "expo-linear-gradient";
 
 import * as newsActions from "../store/actions/news";
 import CustomHeaderButton from "./../components/UI/HeaderButton";
@@ -18,18 +21,21 @@ const SavedScreen = (props) => {
   const savedNewses = useSelector((state) => state.newses.savedNews);
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const dispatch = useDispatch();
 
   const loadSavedNews = useCallback(async () => {
     setError(null);
     setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(newsActions.fetchSavedNews());
     } catch (e) {
       setError(e.message);
     }
     setIsLoading(false);
+    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
   const unSaveHandler = async (key) => {
@@ -44,6 +50,14 @@ const SavedScreen = (props) => {
     setIsLoading(true);
     loadSavedNews().then(() => setIsLoading(false));
   }, [dispatch, loadSavedNews]);
+
+  if (!savedNewses) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.customtext}>You haven't saved anything yet...</Text>
+      </View>
+    );
+  }
 
   if (error) {
     return (
@@ -63,12 +77,13 @@ const SavedScreen = (props) => {
   }
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      nestedScrollEnabled={true}
-      contentContainerStyle={styles.screen}
-    >
-      <View style={styles.container}>
+    <SafeAreaView style={styles.screen}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={loadSavedNews} />
+        }
+      >
         {Object.keys(savedNewses).map((element) => (
           <Story
             key={element}
@@ -84,17 +99,30 @@ const SavedScreen = (props) => {
             }
           />
         ))}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
+};
+
+SavedScreen.navigationOptions = (navData) => {
+  return {
+    headerTitle: "Saved",
+  };
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingVertical: 10,
+    backgroundColor: "#fff",
     alignItems: "center",
-    backgroundColor: "white",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingTop: 20,
+  },
+  customtext: {
+    fontFamily: "montserrat-regular",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   centered: {
     flex: 1,

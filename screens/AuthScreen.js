@@ -6,6 +6,8 @@ import {
   Button,
   TouchableNativeFeedback,
   Text,
+  Alert,
+  ActivityIndicator,
   KeyboardAvoidingView,
 } from "react-native";
 import { useDispatch } from "react-redux";
@@ -74,16 +76,15 @@ const AuthScreen = (props) => {
     formIsValid: false,
   });
 
-  const image = {
-    uri:
-      "https://images.unsplash.com/photo-1551406483-3731d1997540?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80",
-  };
+  // const image = {
+  //   uri:
+  //     "https://images.unsplash.com/photo-1551406483-3731d1997540?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80",
+  // };
 
   const authHandler = async () => {
     const { email, password, confirmPassword } = formState.inputValues;
     const action = isSignUp ? authActions.signup : authActions.login;
     setError(null);
-    console.log("isSignup ", isSignUp, email, password, confirmPassword);
     if (isSignUp && password !== confirmPassword) {
       setError("Password is not matching");
       return;
@@ -94,7 +95,6 @@ const AuthScreen = (props) => {
       props.navigation.navigate("App");
     } catch (err) {
       setError(err.message);
-      console.log("err " + err.message);
       setIsLoading(false);
     }
   };
@@ -111,13 +111,21 @@ const AuthScreen = (props) => {
     [dispatchFormState]
   );
 
+  if (error) {
+    Alert.alert("News Application Says..", error, [{ text: "Okay" }]);
+    setError(null);
+  }
+
   return (
     <KeyboardAvoidingView
       behaviour="padding"
       keyboardverticalOffset={10}
       style={styles.screen}
     >
-      <ImageBackground source={image} style={styles.image}>
+      <ImageBackground
+        source={require("../assets/newsbackground.jpeg")}
+        style={styles.image}
+      >
         <Card style={styles.authContainer}>
           <Input
             id="email"
@@ -135,6 +143,7 @@ const AuthScreen = (props) => {
             label="Password"
             keyboardType="default"
             required
+            secureTextEntry
             minLength={6}
             onInputChange={inputChangeHandler}
             autoCapitalize="none"
@@ -147,6 +156,7 @@ const AuthScreen = (props) => {
               label="Confirm Password"
               keyboardType="default"
               required
+              secureTextEntry
               minLength={6}
               onInputChange={inputChangeHandler}
               autoCapitalize="none"
@@ -158,28 +168,36 @@ const AuthScreen = (props) => {
           )}
           {isSignUp ? (
             <View style={styles.btnContainer}>
-              <Button title="Sign Up" onPress={authHandler} />
+              {isLoading ? (
+                <ActivityIndicator color="blue" size="small" />
+              ) : (
+                <Button title="Sign Up" onPress={authHandler} />
+              )}
             </View>
           ) : (
             <View style={styles.btnContainer}>
-              <Button title="Log In" onPress={authHandler} />
+              {isLoading ? (
+                <ActivityIndicator color="blue" size="small" />
+              ) : (
+                <Button title="Log In" onPress={authHandler} />
+              )}
             </View>
           )}
 
           {isSignUp ? (
             <View style={styles.SignUpContainer}>
-              <Text> Already have an account ? </Text>
+              <Text style={styles.text}> Already have an account ? </Text>
               <TouchableNativeFeedback
                 onPress={() => {
                   setIsSignup((prevState) => !prevState);
                 }}
               >
-                <Text> Log In </Text>
+                <Text style={styles.bluetext}> Log In </Text>
               </TouchableNativeFeedback>
             </View>
           ) : (
             <View style={styles.SignUpContainer}>
-              <Text> Don't have an account ? </Text>
+              <Text style={styles.text}> Don't have an account ? </Text>
               <TouchableNativeFeedback
                 onPress={() => {
                   setIsSignup((prevState) => !prevState);
@@ -187,7 +205,7 @@ const AuthScreen = (props) => {
                   // props.navigation.navigate("Signup");
                 }}
               >
-                <Text> Create One </Text>
+                <Text style={styles.bluetext}> Create One </Text>
               </TouchableNativeFeedback>
             </View>
           )}
@@ -200,6 +218,8 @@ const AuthScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
   },
   image: {
     flex: 1,
@@ -222,6 +242,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     marginVertical: 10,
+  },
+  text: {
+    fontFamily: "montserrat-regular",
+  },
+  bluetext: {
+    color: "#037ffc",
+    fontFamily: "montserrat-semibold",
   },
 });
 
