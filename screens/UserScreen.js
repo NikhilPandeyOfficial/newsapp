@@ -68,7 +68,13 @@ const UserScreen = (props) => {
           icon="textbox-password"
           onPress={defaultHandler}
         />
-        <Cbtn text="Developer Info" icon="worker" onPress={defaultHandler} />
+        <Cbtn
+          text="Developer Info"
+          icon="worker"
+          onPress={() => {
+            props.navigation.navigate("DevScreen");
+          }}
+        />
 
         <Cbtn text="Sign Out" style={styles.signout} onPress={signoutHandler} />
       </View>

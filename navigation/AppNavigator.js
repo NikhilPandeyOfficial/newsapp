@@ -20,6 +20,7 @@ import UserScreen from "./../screens/UserScreen";
 import CategoryNewsScreen from "./../screens/CategoryNewsScreen";
 import StartupScreen from "./../screens/StartupScreen";
 import BrowserScreen from "./../screens/BrowserScreen";
+import DeveloperCreditScreen from "./../screens/DeveloperCreditScreen";
 
 const defaultStackNavOptions = {
   // headerStyle: {
@@ -27,7 +28,7 @@ const defaultStackNavOptions = {
   // },
   // headerBackTitleVisible: false,
   headerTitleStyle: {
-    // fontSize: 38,
+    fontSize: 22,
     fontFamily: "montserrat-bold",
   },
 };
@@ -69,6 +70,8 @@ const SavedNavigator = createStackNavigator(
 const UserNavigator = createStackNavigator(
   {
     User: UserScreen,
+    DevScreen: DeveloperCreditScreen,
+    browser: BrowserScreen,
   },
   {
     defaultNavigationOptions: defaultStackNavOptions,
